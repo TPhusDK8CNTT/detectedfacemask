@@ -8,7 +8,7 @@ import numpy as np
 import argparse
 import cv2
 import os
-
+import datetime
 # xây dựng trình phân tích cú pháp đối số và phân tích cú pháp đối số
 ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--image", required=True,
@@ -18,7 +18,7 @@ ap.add_argument("-f", "--face", type=str,
 	help="Đường dẫn mô hình thư mục mô hình máy dò khuôn mặt")
 ap.add_argument("-m", "--model", type=str,
 	default="mask_detector.model",
-	help="Đường đẫn đến mô hình huấn luyện máy dò khẩu trang")
+	help="Đường đẫn đến thư mực đã được huấn luyện máy dò khẩu trang")
 ap.add_argument("-c", "--confidence", type=float, default=0.5,
 	help="Xác xuất tối thiểu để lọc các phát hiện yếu")
 args = vars(ap.parse_args())
@@ -47,7 +47,8 @@ blob = cv2.dnn.blobFromImage(image, 1.0, (300, 300),
 print("[INFO] Tính toán phát hiện khuôn mặt...")
 net.setInput(blob)
 detections = net.forward()
-
+datetime_object = datetime.datetime.now()
+d = datetime_object.strftime("%m-%d-%Y, %H-%M-%S")
 # vòng qua các phát hiện
 for i in range(0, detections.shape[2]):
 	# trích xuất độ tin cậy (tức là xác suất) liên quan đến phát hiện
@@ -76,16 +77,15 @@ for i in range(0, detections.shape[2]):
 
 		# xác định nhãn lớp và màu sắc mà chúng ta sẽ sử dụng để vẽ hộp giới hạn và văn bản
 		label = "Mask" if mask > withoutMask else "No Mask"
-		color = (0, 255, 0) if label == "Mask" else (0, 0, 255)
-
-		# bao gồm xác suất trong nhãn
-		label = "{}: {:.2f}%".format(label, max(mask, withoutMask) * 100)
+		color = (0, 255, 0) if label == "Mask" else (0, 0, 255)		
 
 		# hiển thị nhãn và hình chữ nhật hộp giới hạn trên khung đầu ra
 		cv2.putText(image, label, (startX, startY - 10),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.45, color, 2)
 		cv2.rectangle(image, (startX, startY), (endX, endY), color, 2)
+		cv2.imwrite("ImageOut/"+ label +"-" + str(d) + ".jpg",image)
 
 # hiển thị ảnh đầu ra
 cv2.imshow("Image Out", image)
+
 cv2.waitKey(0)
