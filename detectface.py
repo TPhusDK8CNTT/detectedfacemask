@@ -67,12 +67,12 @@ def detect_and_predict_mask(frame, faceNet, maskNet):
 ap = argparse.ArgumentParser()
 ap.add_argument("-f", "--face", type=str,
 	default="face_detector",
-	help="Duong dan den thu muc mo hinh may do khuon mat")
+	help="Đường dẫn đến mô hình máy dò khuôn mặt")
 ap.add_argument("-m", "--model", type=str,
 	default="mask_detector.model",
-	help="Duong dan den mo hinh da huan luyen may do khẩu trang")
+	help="Đường đẫn đến thư mực đã được huấn luyện máy dò khẩu trang")
 ap.add_argument("-c", "--confidence", type=float, default=0.5,
-	help="Xac xuat toi thieu de loc cac phat hien yeu")
+	help="Xác xuất tối thiểu để lọc các phát hiện yếu")
 args = vars(ap.parse_args())
 
 # tải mô hình phát hiện khuôn mặt nối tiếp của chúng tôi từ đĩa
