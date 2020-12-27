@@ -1,5 +1,4 @@
-# detectedfacemask
-Detected FaceMask
+
 
 Trước khi chạy chương trình:
 - Tạo thư mục Noname trong.
